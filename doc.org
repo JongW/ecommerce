@@ -7,4 +7,16 @@
 
 * Documentation
 ** Setting up working enviroment
-- Create a virtual enviroment
+*** Setting up a virtual enviroment
+#+BEGIN_SRC bash
+ virtualenv -p python3 .
+ source bin/activate
+ pip install Django
+#+END_SRC
+
++ Not using django 1.11.4 like the tutorial because of runserver error
+*** Setting up django project
+#+BEGIN_SRC bash
+django-admin startproject ecommerce .
+python manage.py runserver
+#+END_SRC
