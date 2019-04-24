@@ -1,0 +1,10 @@
+#+TITLE:  Django Ecommerce project self documentation
+
+* Some ground rules to keep this project
+- Document all programs installed and code that is ran to do so
+- Update github repo with proper commit messages
+- Remember to takes notes for everystep
+
+* Documentation
+** Setting up working enviroment
+- Create a virtual enviroment
