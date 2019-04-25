@@ -8,15 +8,21 @@
 * Documentation
 ** Setting up working enviroment
 *** Setting up a virtual enviroment
+- To activate venv in *terminal*
 #+BEGIN_SRC bash
  virtualenv -p python3 .
  source bin/activate
  pip install Django
 #+END_SRC
 
+- To activate venv in *emacs* for auto complete
+#+BEGIN_SRC elisp
+ pyvenv activate /dev/ecommerce/bin/python
+#+END_SRC
+
 + Not using django 1.11.4 like the tutorial because of runserver error
 *** Setting up django project
 #+BEGIN_SRC bash
-django-admin startproject ecommerce .
+django-admin startproject ecommerce
 python manage.py runserver
 #+END_SRC
