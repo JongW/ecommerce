@@ -26,3 +26,93 @@
 django-admin startproject ecommerce
 python manage.py runserver
 #+END_SRC
+
+** Basic django
+*** Views
+**** Linking views with url
+- Defines functions which tells django what to load
+ #+BEGIN_SRC python
+ # views.py
+from django.http import HttpResponse
+
+def home_page(request):
+    return HttpResponse("Hello world")
+ #+END_SRC
+- When home_page is callled returns HttpResponse(Tells the browser what to load)
+
+- Called from at urls.py
+  #+BEGIN_SRC python
+# urls.py
+from django.urls import path
+
+urlpatterns = [
+    path('', home_page),
+    path('admin/', admin.site.urls)
+]
+  #+END_SRC
+- When the browser detects an empty url, calls home_page from views.py
+
+**** Using templates with views
+- Telling django where to look for templates
+ #+BEGIN_SRC python
+# settings.py
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+ #+END_SRC
+
+- Using templates to load html
+ #+BEGIN_SRC python
+from django.http import HttpResponse
+from django.shortcuts import request
+
+def home_page(request):
+    return render(request, "home_page.html", {})
+ #+END_SRC
+**** Adding context
+- We can pass on variables from our views.py to our templates via context
+#+BEGIN_SRC python
+# views.py
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def home_page(request):
+    context = {
+        "title":"home page"
+    }
+    return render(request, "home_page.html", context)
+
+def about_page(request):
+    context = {
+        "title" : "about page"
+    }
+    return render(request, "home_page.html", context)
+
+def contact_page(request):
+    context = {
+        "title" : "contact page"
+    }
+    return render(request, "home_page.html", context)
+#+END_SRC
+- In each of the urls, different title would be loaded
+
+- To recieve context from our views.py in our html
+#+BEGIN_SRC html
+<!-- templates/home_page.html-->
+    <body>
+        <h1> {{title}} </h1>
+        <p>New homepage!</p>
+    </body>
+#+END_SRC
