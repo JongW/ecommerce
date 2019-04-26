@@ -44,6 +44,8 @@ def home_page(request):
   #+BEGIN_SRC python
 # urls.py
 from django.urls import path
+# . as in in the same dir
+from .views import home_page
 
 urlpatterns = [
     path('', home_page),
@@ -82,7 +84,7 @@ def home_page(request):
     return render(request, "home_page.html", {})
  #+END_SRC
 **** Adding context
-- We can pass on variables from our views.py to our templates via context
+- We can pass on variables from our views.py to our templates via context (dictionary)
 #+BEGIN_SRC python
 # views.py
 from django.http import HttpResponse
@@ -107,7 +109,7 @@ def contact_page(request):
     return render(request, "home_page.html", context)
 #+END_SRC
 - In each of the urls, different title would be loaded
-
+ 
 - To recieve context from our views.py in our html
 #+BEGIN_SRC html
 <!-- templates/home_page.html-->
@@ -116,3 +118,44 @@ def contact_page(request):
         <p>New homepage!</p>
     </body>
 #+END_SRC
+*** Forms
+**** HTML form + django
+- Creating a HTML form
+#+BEGIN_SRC html
+<!-- form.html -->
+<form method='post'>
+    {% csrf_token %}
+    <input type='text' placeholder='name' name='fullname'/>
+    <button type='submit'> button </button>
+</form>
+#+END_SRC
+- Django needs a csrf_token for security measures with post requests
+
+- Using Django to recieve data from request
+#+BEGIN_SRC python
+# views.py
+def contact_page(request):
+    # DICT.get -- Retrives the object with key from dict
+    if request.method == "POST":
+        print(request.POST.get("fullname"))
+    return render(request, "form.html")
+
+#+END_SRC
+- *POST* sent from html > Stored as a dictionary > Use *.get* to retrieve specific
+  object by *NAME*
+
+***** GET vs POST
+
+- GET
+  + Should not be used for sensitive data
+  + Data shows up in the url
+  + Can be cached (i guess can be used to make some stuff faster?)
+  + Length restrictions
+   
+- POST
+  + Safer than GET
+  + Can not be cached
+  + Does *not* remain in browser history
+  + No length restrictions
+**** Django form
+-
