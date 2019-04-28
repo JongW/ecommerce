@@ -9,139 +9,138 @@
 ** Setting up working enviroment
 *** Setting up a virtual enviroment
 - To activate venv in *terminal*
-#+BEGIN_SRC bash
- virtualenv -p python3 .
- source bin/activate
- pip install Django
-#+END_SRC
+  #+BEGIN_SRC bash
+    virtualenv -p python3 .
+    source bin/activate
+    pip install Django
+  #+END_SRC
 
 - To activate venv in *emacs* for auto complete
-#+BEGIN_SRC elisp
- pyvenv activate /dev/ecommerce/bin/python
-#+END_SRC
+  #+BEGIN_SRC elisp
+    pyvenv activate /dev/ecommerce/bin/python
+  #+END_SRC
 
 + Not using django 1.11.4 like the tutorial because of runserver error
 *** Setting up django project
 #+BEGIN_SRC bash
-django-admin startproject ecommerce
-python manage.py runserver
+    django-admin startproject ecommerce
+    python manage.py runserver
 #+END_SRC
 
 ** Basic django
 *** Views
 **** Linking views with url
 - Defines functions which tells django what to load
- #+BEGIN_SRC python
- # views.py
-from django.http import HttpResponse
+  #+BEGIN_SRC python
+    # views.py
+    from django.http import HttpResponse
 
-def home_page(request):
-    return HttpResponse("Hello world")
- #+END_SRC
+    def home_page(request):
+        return HttpResponse("Hello world")
+  #+END_SRC
 - When home_page is callled returns HttpResponse(Tells the browser what to load)
 
 - Called from at urls.py
   #+BEGIN_SRC python
-# urls.py
-from django.urls import path
-# . as in in the same dir
-from .views import home_page
+    # urls.py
+    from django.urls import path
+    # . as in in the same dir
+    from .views import home_page
 
-urlpatterns = [
-    path('', home_page),
-    path('admin/', admin.site.urls)
-]
+    urlpatterns = [
+        path('', home_page),
+        path('admin/', admin.site.urls)
+    ]
   #+END_SRC
 - When the browser detects an empty url, calls home_page from views.py
 
 **** Using templates with views
 - Telling django where to look for templates
  #+BEGIN_SRC python
-# settings.py
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+    # settings.py
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [os.path.join(BASE_DIR, 'templates')],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
         },
-    },
-]
+    ]
  #+END_SRC
 
 - Using templates to load html
- #+BEGIN_SRC python
-from django.http import HttpResponse
-from django.shortcuts import request
+  #+BEGIN_SRC python
+    from django.http import HttpResponse
+    from django.shortcuts import request
 
-def home_page(request):
-    return render(request, "home_page.html", {})
- #+END_SRC
+    def home_page(request):
+        return render(request, "home_page.html", {})
+  #+END_SRC
 **** Adding context
 - We can pass on variables from our views.py to our templates via context (dictionary)
-#+BEGIN_SRC python
-# views.py
-from django.http import HttpResponse
-from django.shortcuts import render
+  #+BEGIN_SRC python
+    # views.py
+    from django.http import HttpResponse
+    from django.shortcuts import render
 
-def home_page(request):
-    context = {
-        "title":"home page"
-    }
-    return render(request, "home_page.html", context)
+    def home_page(request):
+        context = {
+            "title":"home page"
+        }
+        return render(request, "home_page.html", context)
 
-def about_page(request):
-    context = {
-        "title" : "about page"
-    }
-    return render(request, "home_page.html", context)
+    def about_page(request):
+        context = {
+            "title" : "about page"
+        }
+        return render(request, "home_page.html", context)
 
-def contact_page(request):
-    context = {
-        "title" : "contact page"
-    }
-    return render(request, "home_page.html", context)
-#+END_SRC
+    def contact_page(request):
+        context = {
+            "title" : "contact page"
+        }
+        return render(request, "home_page.html", context)
+  #+END_SRC
 - In each of the urls, different title would be loaded
  
 - To recieve context from our views.py in our html
-#+BEGIN_SRC html
-<!-- templates/home_page.html-->
-    <body>
-        <h1> {{title}} </h1>
-        <p>New homepage!</p>
-    </body>
-#+END_SRC
+  #+BEGIN_SRC html
+    <!-- templates/home_page.html-->
+        <body>
+            <h1> {{title}} </h1>
+            <p>New homepage!</p>
+        </body>
+  #+END_SRC
 *** Forms
 **** HTML form + django
 - Creating a HTML form
-#+BEGIN_SRC html
-<!-- form.html -->
-<form method='post'>
-    {% csrf_token %}
-    <input type='text' placeholder='name' name='fullname'/>
-    <button type='submit'> button </button>
-</form>
-#+END_SRC
-- Django needs a csrf_token for security measures with post requests
+  #+BEGIN_SRC html
+    <!-- form.html -->
+    <form method='post'>
+        {% csrf_token %}
+        <input type='text' placeholder='name' name='fullname'/>
+        <button type='submit'> button </button>
+    </form>
+  #+END_SRC
+- Django needs a ~csrf_token~ for security measures with post requests
 
 - Using Django to recieve data from request
-#+BEGIN_SRC python
-# views.py
-def contact_page(request):
-    # DICT.get -- Retrives the object with key from dict
-    if request.method == "POST":
-        print(request.POST.get("fullname"))
-    return render(request, "form.html")
-
-#+END_SRC
-- *POST* sent from html > Stored as a dictionary > Use *.get* to retrieve specific
+  #+BEGIN_SRC python
+    # views.py
+    def contact_page(request):
+        # DICT.get -- Retrives the object with key from dict
+        if request.method == "POST":
+            print(request.POST.get("fullname"))
+        return render(request, "form.html")
+  #+END_SRC
+- *POST* sent from html > Stored as a dictionary > Use ~.get~ to retrieve specific
   object by *NAME*
 
 ***** GET vs POST
@@ -151,11 +150,39 @@ def contact_page(request):
   + Data shows up in the url
   + Can be cached (i guess can be used to make some stuff faster?)
   + Length restrictions
-   
+
 - POST
   + Safer than GET
   + Can not be cached
   + Does *not* remain in browser history
   + No length restrictions
 **** Django form
--
+- Usage of django.form class
+  
+  #+BEGIN_SRC python
+    # forms.py
+    from django import forms
+
+    class ContactForm(forms.Form):
+        # Most basic way of creating an input field
+        fullname = forms.CharField()
+
+        # Adding classes to the form using widgets
+        # The widgets specify what <input> is going to be
+        fullname = forms.CharField(
+            widget=forms.Textarea(
+                attrs={
+                    'class': 'form-control'
+                }
+            )
+        )
+  #+END_SRC
+
+  #+BEGIN_SRC html
+    <!-- forms.html -->
+    <forms>
+        {% csrf_token %}
+        {{ contact_form }}
+        <button type='submit'> Submit </button>
+    </forms>
+  #+END_SRC
