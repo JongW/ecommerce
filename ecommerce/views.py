@@ -15,11 +15,17 @@ def about_page(request):
 
 
 def contact_page(request):
-    contact_form = ContactForm()
+    contact_form = ContactForm(request.POST or None)
     context = {"title": "contact page", "contact_form": contact_form}
-    if request.method == "POST":
-        print(request.POST.get("fullname"))
-        print(request.POST.get("email"))
+
+    if contact_form.is_valid():
+        print(contact_form.cleaned_data)
+
+    # if request.method == "POST":
+    #     print(request.POST.get("fullname"))
+    #     print(request.POST.get("email"))
+
+    return render(request, "form.html", context)
 
 
 def home_page_old(request):

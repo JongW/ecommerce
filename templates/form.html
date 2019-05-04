@@ -13,11 +13,11 @@
     <body>
         <p> Django Form </p>
         
-        <forms>
+        <form method='post'>
             {% csrf_token %}
             {{ contact_form }}
             <button type='submit'> Submit </button>
-        </forms>
+        </form>
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->

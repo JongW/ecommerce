@@ -156,7 +156,7 @@
   + Can not be cached
   + Does *not* remain in browser history
   + No length restrictions
-**** Django form
+**** Basics of django form
 - Usage of django.form class
   
   #+BEGIN_SRC python
@@ -180,9 +180,43 @@
 
   #+BEGIN_SRC html
     <!-- forms.html -->
-    <forms>
+    <form method='POST'>
         {% csrf_token %}
         {{ contact_form }}
         <button type='submit'> Submit </button>
-    </forms>
-  #+END_SRC
+    </form>
+  #+END_SRC 
+
+- Validating data
+    + [[https:docs.djangoproject.com/en/2.2/ref/forms/validation/][Django docs : Validating data]]
+
+  #+BEGIN_SRC python
+    # views.py
+    def contact_page(request):
+        # Pass the data recieved from the POST request to the django.forms class
+        contact_form = ContactForm(request.POST or None)
+
+        context = {"title": "contact page", "contact_form": contact_form}
+
+        # django.form.is_valid() :: Triggers *cleaning* and validation of data
+        if contact_form.is_valid():
+            print(contact_form.cleaned_data)
+
+        return render(request, "form.html", context)
+
+    # forms.py
+    class ContactForm(forms.Form):
+        email = forms.EmailField(
+            widget=forms.EmailInput(
+                attrs={"class": "form-control"}))
+
+        # clean_<fieldname>() method is called on a django.form subclass
+        # This method does cleaning that is specific to the <fieldname> attr
+        def clean_email(self):
+            email = self.cleaned_data.get("email")
+
+            if not "gmail.com" in email:
+                raise forms.ValidationError("Email has to be gmail.com")
+
+            return email
+#+END_SRC
