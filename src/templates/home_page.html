@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Untitled</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static "css/main.css" %}"/>
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+    </head>
+    
+    <body>
+        <h1> {{title}} </h1> 
+        <p>New homepage!</p>
+
+        <p>LOGGED IN CONTENT BOYOS</p>
+
+        {% if request.user.is_authenticated %}
+            <h1>{{ premium_content  }}</h1>
+        {% endif %}
+    </body>
+</html>
