@@ -52,4 +52,3 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("Username is taken")
 
         return username
-        return username
